@@ -8,15 +8,15 @@
     <h1>Nos produits phares</h1>
 
     <div class="row">
-        {% for i in 1..4 %}
+        {% for p in products %}
         <div class="col">
             <div class="card">
-                <img src="https://picsum.photos/150/150" class="img-fluid" 
+                <img src="{{ p.picture }}" class="img-fluid" 
                 alt="Image du produit">
                 <div class="card-body">
-                    <h4 class="card-title">Superbe chaise en bois</h4>
-                    <p class="card-text">Lorem ipsum dolor, sit amet 
-                    consectetur adipisicing elit. Perferendis, impedit.</p>
+                    <h4 class="card-title">{{ p.name | nl2br }} ({{ p.price / 100 }} &euro;)</h4>
+                    <span class="badge badge-info">{{ p.category.name }}</span>
+                    <p class="card-text">{{ p.shortDescription }}</p>
                     <a href="#" class="btn btn-primary btn-sm">Détails</a>
                     <a href="#" class="btn btn-success btn-sm">Ajouter</a>                
                 </div>
