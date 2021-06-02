@@ -1,13 +1,17 @@
 {% extends "base.html.twig" %}
 
-{% block title %} Catégorie : {{ category.name }} {% endblock %}
+{% block title %}
+	Catégorie :
+	{{ slug }}
+{% endblock %}
 
 {% block body %}
-    <h1>Catégorie : {{ category.name }}</h1>
+	<h1>Catégorie :
+		{{ category.name }}</h1>
 
-    <div class="row">
-        {% for p in category.products %}
-            <div class="col-3">
+	<div class="row">
+		{% for p in category.products %}
+			<div class="col-3">
 				<div class="card">
 					<img src="{{ p.picture }}" class="img-fluid" alt="Image du produit">
 					<div class="card-body">
@@ -21,7 +25,6 @@
 					</div>
 				</div>
 			</div>
-        {% endfor %}
-    </div>
-
+		{% endfor %}
+	</div>
 {% endblock %}

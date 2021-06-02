@@ -7,6 +7,7 @@ use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class ProductController extends AbstractController
 {
     /**
@@ -35,14 +36,14 @@ class ProductController extends AbstractController
     {
         $product = $productRepository->findOneBy([
             'slug' => $slug
-        ]);    
-        
-        if(!$product) {
-        throw $this->createNotFoundException("Le produit demandé n'existe pas.");
+        ]);
+
+        if(!$product){
+            throw $this->createNotFoundException("Le produit demandé n'existe pas.");
         }
 
         return $this->render('product/show.html.twig', [
-            'product' => $product,
+            'product' => $product
         ]);
     }
 }
