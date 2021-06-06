@@ -2,9 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -44,6 +51,44 @@ class ProductController extends AbstractController
 
         return $this->render('product/show.html.twig', [
             'product' => $product
+        ]);
+    }
+
+    /**
+     * @Route("/admin/product/create", name="product_create")
+     */
+    public function create(FormFactoryInterface $factory)
+    {
+        $builder = $factory->createBuilder();
+
+        $builder->add('name', TextType::class, [
+            'label' => 'Nom du produit',
+            'attr' => ['placeholder' => 'tapez le nom du produit']
+        ])
+            ->add('short_description', TextareaType::class, [
+                'label' => 'Description courte',
+                'attr' => [
+                    'placeholder' => 'tapez une description assez courte mais parlante pour le visiteur'
+                ]
+            ])
+            ->add('price', MoneyType::class, [
+                'label' => 'Prix du produit',
+                'attr' => ['placeholder' => 'tapez le prix du produit en euro']
+            ])
+            ->add('category', EntityType::class, [
+                'label' => 'Catégorie',
+                'class' => Category::class,
+                'choice_label' => function(Category $category){
+                    return strtoupper($category->getName());
+                }
+            ]);
+
+        $form = $builder->getForm();
+
+        $formView = $form->createView();
+
+        return $this->render('product/create.html.twig', [
+            'formView' => $formView
         ]);
     }
 }
