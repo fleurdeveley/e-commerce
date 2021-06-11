@@ -15,19 +15,37 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryController extends AbstractController
 {
+    protected $categoryRepository;
+
+    public function __construct(CategoryRepository $categoryRepository)
+    {
+        $this->CategoryRepository = $categoryRepository;
+    }
+
+    public function renderMenuList()
+    {
+        $categories = $this->categoryRepository->findAll();
+
+        return $this->render('category/_menu.html.twig', [
+            'categories' => $categories
+        ]);
+    }
+
     /**
      * @Route("/admin/category/create", name="category_create")
      */
-    public function create(Request $request, SluggerInterface $slugger,
-    EntityManagerInterface $em)
-    {
+    public function create(
+        Request $request,
+        SluggerInterface $slugger,
+        EntityManagerInterface $em
+    ) {
         $category = new Category;
 
         $form = $this->createForm(CategoryType::class, $category);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $category->setSlug(strtolower($slugger->slug($category->getName())));
 
             $em->persist($category);
@@ -42,20 +60,23 @@ class CategoryController extends AbstractController
             'formView' => $formView
         ]);
     }
-    
+
     /**
      * @Route("/admin/category/{id}/edit", name="category_edit")
      */
-    public function edit($id, CategoryRepository $categoryRepository, 
-    Request $request, EntityManagerInterface $em)
-    {
+    public function edit(
+        $id,
+        CategoryRepository $categoryRepository,
+        Request $request,
+        EntityManagerInterface $em
+    ) {
         $category = $categoryRepository->find($id);
 
         $form = $this->createForm(CategoryType::class, $category);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
             return $this->redirectToRoute('homepage');
