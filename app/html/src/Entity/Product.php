@@ -42,11 +42,15 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="L'image principale du produit est obligatoire.")
+     * @Assert\Url(message="La photo principale doit être une url valide.")
      */
     private $picture;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text")     
+     * @Assert\NotBlank(message="La description courte est obligatoire.")
+     * @Assert\Length(min=20, minMessage="La description doit faire au moins 20 caractères.")
      */
     private $shortDescription;
 
@@ -57,8 +61,8 @@ class Product
     //         new Assert\Length(['min' => 3, 'max' => 255, 'minMessage' => 'Le nom du produit doit 
     //         contenir au moins 3 caractères'])
     //     ]);
-    //     $metaData->addPropertyConstraint('price', new Assert\NotBlank(['message' => 'Le prix du produit
-    //     est obligatoire']));
+    //     $metaData->addPropertyConstraint('price', new Assert\NotBlank(['message' => 'Le prix du 
+    //      produit est obligatoire']));
     // }
 
     public function getId(): ?int
@@ -119,7 +123,7 @@ class Product
         return $this->picture;
     }
 
-    public function setPicture(string $picture): self
+    public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
 
@@ -131,7 +135,7 @@ class Product
         return $this->shortDescription;
     }
 
-    public function setShortDescription(string $shortDescription): self
+    public function setShortDescription(?string $shortDescription): self
     {
         $this->shortDescription = $shortDescription;
 
