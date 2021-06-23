@@ -6,12 +6,16 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CategoryController extends AbstractController
 {
@@ -68,9 +72,14 @@ class CategoryController extends AbstractController
         $id,
         CategoryRepository $categoryRepository,
         Request $request,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Security $security
     ) {
         $category = $categoryRepository->find($id);
+
+        if(!$category) {
+            throw new NotFoundHttpException("Cette catégorie n'existe pas.");
+        }
 
         $form = $this->createForm(CategoryType::class, $category);
 
